@@ -1,10 +1,15 @@
-FROM dorowu/ubuntu-desktop-lxde-vnc
+# Utiliser une image Ubuntu de base
+FROM ubuntu:latest
+
+# Installer les dépendances nécessaires
+RUN apt-get update && apt-get install -y wget curl gnupg
+
+# Ajouter la clé GPG et le dépôt Google Chrome
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list
 
 # Installer Google Chrome
-RUN apt-get update && apt-get install -y wget \
-    && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && dpkg -i google-chrome-stable_current_amd64.deb \
-    && apt-get install -f -y  # Corrige les dépendances
+RUN apt-get update && apt-get install -y google-chrome-stable
 
 # Exposer le port VNC
 EXPOSE 5901
